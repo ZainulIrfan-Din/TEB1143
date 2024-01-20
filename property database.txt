@@ -1,0 +1,136 @@
+drop table viewing;
+drop table propertyForRent;
+drop table staff;
+drop table client;
+drop table Privateowner;
+drop table branch;
+
+CREATE TABLE Branch
+( BranchNo	VARCHAR2(8),
+  street	VARCHAR2(20),
+  city		VARCHAR2(10),
+  postCode	VARCHAR2(8),
+  CONSTRAINTS branch_pk PRIMARY KEY (branchNo));
+
+CREATE TABLE PrivateOwner
+( OwnerNo	VARCHAR2(8),
+  fName		VARCHAR2(10),
+  lName		VARCHAR2(10),
+  Address	VARCHAR2(30),
+  TelNo		VARCHAR2(15),
+  CONSTRAINTS Owner_pk PRIMARY KEY (OwnerNo)); 
+
+CREATE TABLE Client
+( ClientNo	VARCHAR2(8),
+  fName		VARCHAR2(10),
+  lName		VARCHAR2(10),
+  TelNo		VARCHAR2(15),
+  PrefType	VARCHAR2(15),
+  MaxRent	NUMBER(5,2),	
+CONSTRAINTS client_pk PRIMARY KEY (ClientNo));
+
+CREATE TABLE Staff
+( StaffNo	VARCHAR2(8),
+  fName		VARCHAR2(10),
+  lName		VARCHAR2(10),
+  position	VARCHAR2(10),
+  Gender	VARCHAR2(8),
+  DOB		DATE,	
+  Salary	NUMBER(7,2),
+  BranchNo      VARCHAR2(8),
+CONSTRAINTS Staff_pk PRIMARY KEY (StaffNo),
+CONSTRAINTS Staff_fk FOREIGN KEY (BranchNo) REFERENCES Branch (BranchNo));
+
+CREATE TABLE Property
+( PropertyNo	VARCHAR2(10),
+  Street	VARCHAR2(15),
+  City		VARCHAR2(10),
+  postCode	VARCHAR2(8),
+  Type		VARCHAR2(8),
+  Rooms		NUMBER(5),	
+  Rent		NUMBER(5,2),
+  OwnerNo	VARCHAR2(8),
+  StaffNo      	VARCHAR2(8),
+  BranchNo      VARCHAR2(8),
+CONSTRAINTS prop_pk PRIMARY KEY (PropertyNo),
+CONSTRAINTS prop_fk1 FOREIGN KEY (OwnerNo) REFERENCES PrivateOwner (OwnerNo),
+CONSTRAINTS prop_fk2 FOREIGN KEY (StaffNo) REFERENCES Staff (StaffNo),
+CONSTRAINTS prop_fk3 FOREIGN KEY (BranchNo) REFERENCES Branch (BranchNo));
+
+CREATE TABLE Viewing
+( ClientNo	VARCHAR2(8),
+  PropertyNo	VARCHAR2(10),
+  viewDate	DATE,
+  ViewComment	VARCHAR2(20),
+CONSTRAINTS vw_pk PRIMARY KEY (ClientNo, PropertyNo, ViewDate),
+CONSTRAINTS vw_Cl_fk1 FOREIGN KEY (ClientNo) REFERENCES Client (ClientNo),
+CONSTRAINTS vw_Prop_fk2 FOREIGN KEY (PropertyNo) REFERENCES Property (PropertyNo));
+
+
+insert into branch values
+('B005', '22 Deer Rd', 'London', 'SW1 4EH');
+insert into branch values
+('B007', '16 Argyll St', 'Aberdeen', 'AB2 3SU');
+insert into branch values
+('B003', '163 Main St', 'Glasgow', 'G11 9QX');
+insert into branch values
+('B004', '32 Manse Rd', 'Bristol', 'BS99 1NZ');
+insert into branch values
+('B002', '56 Clover Dr', 'London', 'NW10 6EU');
+
+insert into staff values
+('SL21', 'John', 'White', 'Manager', 'M', '01-Oct-1985', 30000, 'B005');
+insert into staff values
+('SG37', 'Ann', 'Beech', 'Assistant', 'F', '10-Nov-1968', 12000, 'B003');
+insert into staff values
+('SG14', 'David', 'Ford', 'Supervisor', 'M', '24-Mar-1990', 18000, 'B003');
+insert into staff values
+('SA9', 'Mary', 'Howe', 'Assistant', 'F', '19-Feb-1970', 9000, 'B007' );
+insert into staff values
+('SG5', 'Susan', 'Brand', 'Manager', 'F', '03-Jun-1985', 30000, 'B003' );
+insert into staff values
+('SL41', 'Julie', 'Lee', 'Assistant', 'F', '13-Jun-1989', 9000, 'B005');
+
+insert into client values
+('CR76', 'John', 'Kay', '0207-777-5632', 'Flat', 425);
+insert into client values
+('CR56', 'Aline', 'Stewart', '0141-848-1825', 'Flat', 350);
+insert into client values
+('CR74', 'Mike', 'Ritchie', '01475-392178', 'House', 750);
+insert into client values
+('CR62', 'Mary', 'Tregear', '01224-196720', 'Flat', 600);
+
+insert into PrivateOwner values
+('CO46', 'Joe', 'Keogh', '2 Fergus Dr, Aberdeen AB@ 7SX', '01224-861212');
+insert into PrivateOwner values
+('CO87', 'Carol', 'Farrel', '6, Archray St, Glasgow G32 9DX','0141-357-7419');
+insert into PrivateOwner values
+('CO40', 'Tina', 'Murphy', '63 Well St, Glasgow G42', '0141-943-1278');
+insert into PrivateOwner values
+('CO93', 'Tony', 'Shaw', '12 Park Pl, Glasgow G4 0QR', '01741-225-7025');
+
+
+insert into property values
+('PA14','16 Holhead', 'Aberdeen', 'AB7 5SU', 'House', 6, 650, 'CO46', 'SA9', 'B007');
+insert into property values
+('PL94','16 Argyll St', 'London', 'NW2', 'Flat', 4, 400, 'CO87', 'SL41', 'B005');
+insert into property values
+('PG4','6 Lawrence St', 'Glasgow', 'G11 9QX', 'Flat', 3, 350, 'CO40', null, 'B003');
+insert into property values
+('PG36','2 Manor Rd', 'Glasgow', 'G32 4QX', 'Flat', 3, 375, 'CO93', 'SG37', 'B003');
+insert into property values
+('PG21','18 Dale Rd', 'Glasgow', 'G12', 'House', 5, 600, 'CO87', 'SG37', 'B003');
+insert into property values
+('PG16','5 Novar Dr', 'Glasgow', 'G12 9AX', 'Flat', 4, 450, 'CO93', 'SG14', 'B003');
+
+
+insert into viewing values
+('CR56', 'PA14', '24-May-04', 'too small');
+insert into viewing values
+('CR76', 'PG4', '20-Apr-04', 'too remote');
+insert into viewing values
+('CR56', 'PG4', '26-May-04', Null);
+insert into viewing values
+('CR62', 'PA14', '14-May-04', 'no dining room');
+insert into viewing values
+('CR56', 'PG36', '28-Apr-04', null);

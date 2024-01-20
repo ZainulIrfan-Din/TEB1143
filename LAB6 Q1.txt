@@ -1,0 +1,82 @@
+/*DROP TABLE OFFICERMATCH;
+DROP TABLE OFFICER;
+DROP TABLE MATCH;
+DROP TABLE OFFICERROLE;
+DROP TABLE STADIUM;
+DROP TABLE TEAM;*/
+
+CREATE TABLE TEAM (
+    teamID number(4) primary key,
+    teamName varchar2(30),
+    country varchar(20),
+    win number(2),
+    lose number(2),
+    draw number(2),
+    goal_for number(2),
+    goal_against number(2),
+    points number(2),
+    CONSTRAINT teamName check (teamName is NOT NULL) /*Q1(b)*/
+    );
+    
+CREATE TABLE STADIUM (
+    stadiumID number(4) primary key,
+    stadName varchar2(30),
+    /*stadCapacity number(6),*/
+    stadCity varchar2(20)
+    );
+
+CREATE TABLE OFFICERROLE (
+    roleID number(4) primary key,
+    roleName varchar2(20)
+    );
+    
+CREATE TABLE MATCH (
+    matchID number(4) primary key,
+    matchDate varchar(10),
+    matchTime varchar(10),
+    team1ID number(4),
+    team2ID number(4),
+    stadiumID number(4),
+    winnerTeamID number(4),
+    foreign key (team1ID) references TEAM (teamID),
+    foreign key (team2ID) references TEAM (teamID),
+    foreign key (stadiumID) references STADIUM (stadiumID),
+    foreign key (winnerTeamID) references TEAM (teamID),
+    CONSTRAINT MATCH_unique UNIQUE (team1ID, team2ID) /*Q1(c)*/
+    );
+
+CREATE TABLE OFFICER (
+    officerID number(4) primary key,
+    offName varchar2(20),
+    offRoleID number(4),
+    foreign key (offRoleID) references OFFICERROLE (roleID)
+    );
+
+CREATE TABLE OFFICERMATCH (
+    matchID number(4),
+    officerID number(4),
+    foreign key (matchID) references MATCH (matchID),
+    foreign key (officerID) references OFFICER (officerID)
+    );
+    
+ALTER TABLE STADIUM /*Q1(f)*/
+    ADD stadCapacity number(6);
+    
+insert into TEAM values (0001, 'Team1', 'Team1Country', 0, 1, 0, 0, 1, 0);
+insert into TEAM values (0002, 'Team2', 'Team2Country', 1, 0, 0, 1, 0, 3);
+insert into STADIUM values (2222, 'Stadium UTP', 'Tronoh', 1000);
+insert into OFFICERROLE values (1234, 'Referee');
+insert into MATCH values (1000, '27/02/2020', '8:00am', 0001, 0002, 2222, 0002);
+insert into OFFICER values (4321, 'Encik Ref', 1234);
+insert into OFFICERMATCH values (1000, 4321);
+
+UPDATE STADIUM /*Q1(g)*/
+SET stadName = 'Stadium UTP', stadCity = 'Tronoh', stadCapacity = 10000
+WHERE stadiumID = 2222;
+
+select * from TEAM;
+select * from MATCH;
+select * from STADIUM;
+select * from OFFICERROLE;
+select * from OFFICER;
+    

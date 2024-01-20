@@ -1,0 +1,54 @@
+/*DROP TABLE JUDGING;
+DROP TABLE PERFORM;
+DROP TABLE JUDGE;
+DROP TABLE SONG;
+DROP TABLE SINGER;*/
+
+CREATE TABLE SINGER (
+    singerID number(4) primary key,
+    singerName varchar2(20),
+    singerAge number(2)
+    );
+    
+CREATE TABLE SONG (
+    songID number(4) primary key,
+    songName varchar2(20),
+    songLength number(4,2),
+    CONSTRAINT songName check (songName is NOT NULL)
+    );
+
+CREATE TABLE JUDGE (
+    judgeID number(4) primary key,
+    judgeName varchar2(20)
+    );
+    
+CREATE TABLE PERFORM (
+    perfID number(4) primary key,
+    singerID number(4),
+    songID number(4),
+    totscore number(2) default 0,
+    foreign key (singerID) references SINGER (singerID),
+    foreign key (songID) references SONG (songID),
+    CONSTRAINT totscore check (totscore BETWEEN 0 and 10)
+    );
+
+CREATE TABLE JUDGING (
+    judgeID number(4),
+    perfID number(4),
+    score number(2),
+    foreign key (judgeID) references JUDGE(judgeID),
+    foreign key (perfID) references PERFORM(perfID),
+    CONSTRAINT score check (score BETWEEN 0 and 10)
+    );
+    
+insert into SINGER values (1111, 'Penyanyi', 23);
+insert into SONG values (2323, 'Lagu Sendu', 2.36);
+insert into JUDGE values (5555, 'Juri Tegas');
+insert into PERFORM values (9999, 1111, 2323, 9);
+insert into JUDGING values (5555, 9999, 9);
+
+select * from SINGER;
+select * from SONG;
+select * from JUDGE;
+select * from PERFORM;
+select * from JUDGING;

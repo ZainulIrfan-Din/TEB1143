@@ -1,0 +1,63 @@
+DROP TABLE TESTING_ITEM; 
+DROP TABLE TESTING_RUBRIC; 
+DROP TABLE TESTER; 
+
+CREATE TABLE TESTER (
+Tester_ID number(2) PRIMARY KEY,
+Staff_ID number(6) NOT NULL UNIQUE, 
+Staff_Name varchar2(20) NOT NULL,
+Department varchar2(10) NOT NULL, 
+Connection_Bandwidth varchar2(10) NOT NULL
+); 
+
+CREATE TABLE TESTING_RUBRIC(
+Rubric_ID number(2) primary key,
+Description varchar2(40) NOT NULL,
+UNIQUE (Description)
+); 
+
+CREATE TABLE TESTING_ITEM (
+TestNo number(2) PRIMARY KEY,
+TestDate date NOT NULL, 
+CourseCode varchar2(10)NOT NULL,
+CourseName varchar2(30)NOT NULL, 
+ItemType varchar2(30)NOT NULL, 
+ItemDesc varchar2(30),
+Tester1 number(6)NOT NULL,
+T1Rubric1Score number(2),
+T1Rubric2Score number(2),
+T1Rubric3Score number(2),
+Tester2 number(6)NOT NULL,
+T2Rubric1Score number(2),
+T2Rubric2Score number(2),
+T2Rubric3Score number(2),
+AvgRubric1Score number(5,2),
+AvgRubric2Score number(5,2),
+AvgRubric3Score number(5,2),
+foreign key (Tester1) references TESTER(Staff_ID),
+foreign key (Tester2) references TESTER(Staff_ID),
+CHECK (Tester1 IN (112233, 176677, 201010)),
+CHECK (Tester2 IN (112233, 176677, 201010)),
+CHECK (T1Rubric1Score >= 0 AND T1Rubric1Score <= 10),
+CHECK (T1Rubric2Score >= 0 AND T1Rubric2Score <= 10),
+CHECK (T1Rubric3Score >= 0 AND T1Rubric3Score <= 10),
+CHECK (T2Rubric1Score >= 0 AND T2Rubric1Score <= 10),
+CHECK (T2Rubric2Score >= 0 AND T2Rubric2Score <= 10),
+CHECK (T2Rubric3Score >= 0 AND T2Rubric3Score <= 10)
+);
+
+INSERT INTO TESTER VALUES(1,112233,'Chong','CIS','1 MB');
+INSERT INTO TESTER VALUES(2,176677,'Husin','FAS','512 KB');
+INSERT INTO TESTER VALUES(3,201010,'Patrick','CHE','1 MB');
+
+INSERT INTO TESTING_ITEM VALUES (1, TO_DATE('10/4/2020','DD/MM/YYYY'), 'TEB1143', 'Database Systems', 'Test2', '40MCQs', 112233, 8, 10, 5, 176677, 9, 10, 6, 8.5, 10.0, 5.5);
+INSERT INTO TESTING_ITEM(TestNo, TestDate, CourseCode, CourseName, ItemType, ItemDesc, Tester1, Tester2) VALUES (2, TO_DATE('11/4/2020','DD/MM/YYYY'), 'TEB1223', 'Statistics', 'Test2', '5 Essays', 112233, 201010);
+INSERT INTO TESTING_ITEM(TestNo, TestDate, CourseCode, CourseName, ItemType, Tester1, Tester2) VALUES (3, TO_DATE('12/4/2020','DD/MM/YYYY'), 'TEB1143', 'Database Systems', 'Assignment', 176677, 201010);
+
+INSERT INTO TESTING_RUBRIC VALUES(1,'Network Stability');
+INSERT INTO TESTING_RUBRIC VALUES(2,'Item Accessibility');
+INSERT INTO TESTING_RUBRIC VALUES(3,'Network Load');
+
+select * FROM TESTING_ITEM;
+select * FROM TESTER;
+select * FROM TESTING_RUBRIC;

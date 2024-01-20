@@ -1,0 +1,63 @@
+/* remove all tables in database - DDL command: DROP TABLE statement */
+drop table enrolment;
+drop table course;
+drop table lecturer;
+drop table student;
+
+/* create tables one by one. Start with the one without foreign key - DDL command: CREATE TABLE statement */
+create table student
+(sid  number(4) primary key,
+ sname varchar2(30));
+
+create table lecturer
+(lno   number(4),
+ lname varchar2(30),
+ primary key (lno));
+ 
+create table course
+(ccode  char(7) primary key,
+ cname  varchar2(40),
+ ccredithr  number(1),
+ lno  number(4),
+ foreign key (lno) references lecturer(lno));
+ 
+create table enrolment
+(sno number(4),
+ ccode char(7),
+ primary key(sno, ccode),
+ foreign key (sno) references student(sid),
+ foreign key (ccode) references course(ccode));
+ 
+/* inserting data into tables - DML command: INSERT statement */
+insert into student values (1111, 'Ahmad');
+insert into student values (2222, 'Johnny');
+insert into student values (3333, 'Marianne See');
+
+insert into lecturer values (1111, 'Peter');
+insert into lecturer values (1212, 'Sarah');
+
+insert into course values ('TEB1143', 'Database Systems', 3, 1111);
+insert into course values ('TEB1014', 'Structured Programming', 4, 1111);
+insert into course values ('TEB1003', 'Discrete Mathematics', 3, 1212);
+insert into course values ('TEB2343', 'Wireless Tech', 3, null);
+
+insert into enrolment values (1111, 'TEB1143');
+insert into enrolment values (1111, 'TEB1014');
+insert into enrolment values (1111, 'TEB1003');
+insert into enrolment values (2222, 'TEB1143');
+insert into enrolment values (3333, 'TEB1143');
+insert into enrolment values (3333, 'TEB1003');
+
+/* Sample queries - DML command: SELECT statement */
+select * from student;
+
+select * from lecturer;
+
+select * from course;
+
+select * from enrolment;
+
+select ccode, lno from course;
+
+select ccode from course where ccredithr = 3;
+ 
